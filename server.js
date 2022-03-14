@@ -7,9 +7,9 @@ const app = express();
 const endpoint = '/';
 const port = 30005;
 const connection = mysql.createConnection({
-  host: "67.205.142.54",
-  user: "baumanntennisapi",
-  password: "hwdKD8CAh8KCteKb",
+  host: "127.0.0.1",//"67.205.142.54",
+  user: "root",//"baumanntennisapi",
+  password: "",//"hwdKD8CAh8KCteKb",
   database: "baumanntennisapi"
 });
 connection.connect();
@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.get(endpoint + "admin", (req, res) => {
-  connection.query(`UPDATE 'Endpoints' SET 'Hits' = 'Hits' + 1 WHERE Endpoint = 'Admin'`, (err, result) => {
+  connection.query(`UPDATE endpoints SET Hits = Hits + 1 WHERE Endpoint = 'Admin'`, (err, result) => {
     if (err) throw err;
   });
   connection.query(`SELECT * FROM Endpoints`, (err, result) => {
@@ -34,15 +34,19 @@ app.get(endpoint + "admin", (req, res) => {
 });
 
 app.post(endpoint + "adminlogin", (req, res) => {
-  connection.query(`UPDATE 'Endpoints' SET 'Hits' = 'Hits' + 1 WHERE Endpoint = 'Admin Login'`, (err, result) => {
+  connection.query(`UPDATE Endpoints SET Hits = Hits + 1 WHERE Endpoint = 'Admin Login'`, (err, result) => {
     if (err) throw err;
   });
-  connection.query(`SELECT * FROM 'AdminAccount' WHERE 'username' LIKE '${req.body.username}' AND 'password' LIKE '${req.body.password}'`, (err, result) => {
+  connection.query(`SELECT * FROM AdminAccount WHERE username LIKE '${req.body.username}' AND password LIKE '${req.body.password}'`, (err, result) => {
     if (err) throw err;
     if (result == null) {
-      res.send(JSON.stringify(false));
+      res.send(JSON.stringify({
+        success: false
+      }));
     } else {
-      res.send(JSON.stringify(true));
+      res.send(JSON.stringify({
+        success: true
+      }));
     }
   });
 });

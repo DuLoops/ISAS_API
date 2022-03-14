@@ -1,6 +1,12 @@
-const endPointRoot = "https://API.baumanntennis.com";
+const endPointRoot = "http://127.0.0.1:30005";//"https://API.baumanntennis.com";
 const GET = "GET";
 const POST = "POST";
+
+document.querySelector("#LoginForm").addEventListener('submit', (e) => {
+  e.preventDefault();
+  login();
+  refresh();
+});
 
 const getAll = () => {
   const xhttp = new XMLHttpRequest();
@@ -14,7 +20,7 @@ const getAll = () => {
           let endpoints = JSON.parse(this.response);
           endpoints.forEach(element => {
               let child = document.createElement("p");
-              child.innerHTML = element.name + ": " + element.hits;
+              child.innerHTML = element.Endpoint + ": " + element.Hits;
               document.getElementById("Stats").appendChild(child);
           });
       };
@@ -27,8 +33,8 @@ const login = () => {
   const url = endPointRoot + resource;
 
   let LoginInfo = {
-    username: document.querySelector("#LoginForm").Username.value,
-    password: document.querySelector("#LoginForm").Password.value
+    username: document.getElementById("Username").value,
+    password: document.getElementById("Password").value
   }
 
   xhttp.open(POST, url, true);
@@ -37,7 +43,7 @@ const login = () => {
       if (this.readyState == 4 && this.status == 200) {
           if (JSON.parse(this.response).success) {
             document.getElementById("LoginWidget").style.display = "none";
-            document.getElementById("Stats").style.display = "block";
+            document.getElementById("AdminPage").style.display = "block";
           } else {
             alert("Login unsuccessful, please try again");
           }
